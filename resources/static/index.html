@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Frontend 2.0</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        input,
+        textarea,
+        button {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 8px 0;
+            padding: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        .block {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+<h1>Лабораторная работа</h1>
+<div class="block">
+    <h2>Отправка данных</h2>
+    <input
+            id="textInput"
+            type="text"
+            placeholder="Введите текст"
+    >
+    <button id="sendButton">
+        Отправить
+    </button>
+</div>
+<div class="block">
+    <h2>Получение данных</h2>
+    <input
+            id="requestInput"
+            type="text"
+            placeholder="Дополнительное поле"
+    >
+    <button id="getButton">
+        Получить данные
+    </button>
+
+    <textarea
+            id="result"
+            readonly
+            placeholder="Здесь появится содержимое data.txt"
+    ></textarea>
+
+</div>
+
+<div id="status"></div>
+
+
+<script>
+
+    const API = "/api/data";
+
+
+    // ==========================
+    // FRONTEND 1.0
+    // ==========================
+
+    document
+        .getElementById("sendButton")
+        .addEventListener("click", async () => {
+            const input =
+                document.getElementById("textInput");
+            const status =
+                document.getElementById("status");
+            const value = input.value;
+            if (!value.trim()) {
+                status.textContent = "Введите текст";
+                return;
+            }
+            try {
+                const response = await fetch(API, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "text/plain; charset=UTF-8"
+                    },
+                    body: value
+                });
+                const result =
+                    await response.text();
+
+                status.textContent = result;
+            } catch (error) {
+                status.textContent =
+                    "Ошибка подключения к backend";
+            }
+        });
+    // ==========================
+    // FRONTEND 2.0
+    // ==========================
+
+    document.getElementById("getButton")
+        .addEventListener("click", async () => {
+
+            const resultField =
+                document.getElementById("result");
+
+            try {
+                const response = await fetch(API);
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
+
+                const data = await response.text();
+                resultField.value = data;
+
+            } catch (error) {
+                resultField.value =
+                    "Ошибка подключения к backend";
+            }
+        });
+
+
+</script>
+
+</body>
+</html>
