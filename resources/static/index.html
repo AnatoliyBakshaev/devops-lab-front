@@ -77,11 +77,6 @@
 
     const API = "/api/data";
 
-
-    // ==========================
-    // FRONTEND 1.0
-    // ==========================
-
     document
         .getElementById("sendButton")
         .addEventListener("click", async () => {
@@ -109,7 +104,7 @@
                 status.textContent = result;
             } catch (error) {
                 status.textContent =
-                    "Ошибка подключения к backend";
+                    "Ошибка подключения";
             }
         });
     // ==========================
